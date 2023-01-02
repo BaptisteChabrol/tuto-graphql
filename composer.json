@@ -15,6 +15,7 @@
         "nelmio/cors-bundle": "^2.2",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpstan/phpdoc-parser": "^1.15",
+        "symfony/apache-pack": "^1.0",
         "symfony/asset": "6.2.*",
         "symfony/console": "6.2.*",
         "symfony/dotenv": "6.2.*",
@@ -68,6 +69,9 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "compile": [
+            "symfony console doctrine:migrations:migrate"
         ]
     },
     "conflict": {
@@ -80,7 +84,6 @@
         }
     },
     "require-dev": {
-        "symfony/apache-pack": "^1.0",
         "symfony/maker-bundle": "^1.48",
         "symfony/stopwatch": "6.2.*",
         "symfony/web-profiler-bundle": "6.2.*"
