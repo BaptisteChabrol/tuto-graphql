@@ -1,0 +1,348 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+    <main class="flex justify-center">
+        <div class="w-2/3 mt-16 mb-32">
+            <div class="flex items-center opacity-0 content mb-32">
+                <div class="mr-8">
+                    <h2 class="text-2xl">Présentation de GraphQL</h2>
+                    <div class="my-2">
+                        <p class="pa">GraphQL a été créé en 2012 par Facebook, puis publié en open source à partir de
+                            2015. Son
+                            objectif principal est d'être la meilleure alternative aux API REST, notamment en évitant l'<i>under-fetching</i>
+                            et l'<i>over-fetching</i>. </p>
+                        <p>Il y a d'autres avantages comme créer des API flexibles et rapides, ou de pouvoir faire
+                            évoluer
+                            une API déjà existante sans avoir peur de dégrader son fonctionnement.</p>
+                        <p>Facebook a eu l'idée de créer cela pour réduire la consommation ainsi que le temps de
+                            chargement
+                            des données qui étaient trop importants sur les applications mobiles à cause d'une plus
+                            faible
+                            bande passante. GraphQL résout ce problème en n'envoyant qu'une seule requête et en laissant
+                            le
+                            côté serveur structurer les données.</p>
+                    </div>
+                </div>
+                <div>
+                    <img src="{{ asset('logos/graphql.png') }}" style="width: 400px">
+                </div>
+            </div>
+            <div class="flex float-right items-center opacity-0 content mb-32">
+                <div>
+                    <h2 class="text-2xl">Un modèle de communication</h2>
+                    <div class="my-2">
+                        <p>Comme GraphQL est une spécification, il n'impose aucune architecture spécifique. Ce qui veut
+                            dire qu'il peut être utilisé sur une API existante et peut être implémenté par beaucoup de
+                            langages (cf: <a href="https://graphql.org/code/#language-support" target="_blank"
+                                             class="text-[-webkit-link] underline">La liste des langages supportés)</a>.
+                        </p>
+                        <p>De plus, il existe plusieurs serveurs pour chaque langage, chacun ayant ses spécificités. Par
+                            exemple pour php, il existe <a href="https://graphql.org/code/#php"
+                                                           class="text-[-webkit-link]">API Platform</a> pour Symfony,
+                            WPGraphQL pour Wordpress, ou encore Phare pour Laravel pour ne citer qu'eux.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="opacity-0 content mb-16">
+                <div class="text-center">
+                    <h2 class="text-2xl">Les cas d'utilisation</h2>
+                    <div class="my-2">
+                        <p>Il y a deux cas majoritaires où GraphQL peut être utilisé :</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center opacity-0 content mb-16">
+                <div class="mr-8">
+                    <div class="my-2">
+                        <ul class="list-disc">
+                            <li><b>Avec une application connectée à une BD.</b> Le client va directement communiquer
+                                avec l'API GraphQL qui elle-même se charge de récupérer/modifier les données.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <img src="{{ asset('logos/graphql-bdd.png') }}" class="object-contain" style="width: 1000px">
+                </div>
+            </div>
+            <div class="flex float-right items-center opacity-0 content mb-32">
+                <div class="mr-8">
+                    <img src="{{ asset('logos/graphql-api2.png') }}" class="object-contain" style="width: 1800px">
+                </div>
+                <div>
+                    <div class="my-2">
+                        <ul class="list-disc">
+                            <li><b>L'intégrer dans un système déjà existant.</b> Si une application utilise plusieurs
+                                API complexes, GraphQL peut être intégré pour faire abstraction de ces API et unifier le
+                                système. Ça a pour but de rendre plus simple leur utilisation et d'éviter de la
+                                complexifier avec leur future évolution.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="opacity-0 content mb-16">
+                <div class="text-center">
+                    <h2 class="text-2xl">Un peu de vocabulaire :</h2>
+                </div>
+            </div>
+            <div class="opacity-0 content mb-8">
+                <div class="my-2">
+                    <h2 class="text-2xl text-center mb-8">Le schéma</h2>
+                    <p>Le schéma est le point d'entrée de GraphQL. C'est lui qui permet à l'utilisateur de
+                        communiquer avec le serveur. On va retrouver à l'intérieur toutes les opérations que
+                        l'utilisateur peut faire, les types des données qu'il va récupérer ainsi que les relations entre
+                        ces types :</p>
+                </div>
+            </div>
+            <div class="mb-16">
+                <div class="my-2">
+                    <pre data-enlighter-language="javascript" class="mb-8">
+const typeDefs = {
+    enum BookType {
+    ROMAN
+    FICTION
+    BD
+    }
+    type Book {
+        id: ID!
+        title: String!
+        author: String!
+        price: Int!
+        type: BookType!
+        review: Review
+
+    }
+    type Review {
+        id: ID!
+        content: String!
+        author: String!
+        book: Book!
+    }
+    type Query {
+        getBooks: [Book]!
+        getBook(id: Int): Book!
+        getReviews: [Review]!
+        getReview(id: Int): Review!
+    }
+    type Mutation {
+        addBook(addBookInput: BookAddInput): Book!
+        updateReview(id: Int!, updateReviewInput: ReviewUpdateInput!): Review!
+        deleteBook(id: Int!): Book!
+    }
+    input BookAddInput {
+        title: String!
+        author: String!
+        price: Int!
+        type: BookType!
+    }
+    input ReviewUpdateInput {
+        content: String!
+        author: String!
+        book: Book!
+    }
+}
+                    </pre>
+                    <div class="opacity-0 content">
+                        <p>Voici un exemple très synthétisé de ce à quoi ressemble un schéma GraphQL. On a donc ici deux
+                            objets <b>Book</b> et <b>Review</b> qui sont composés chacun d'eux de différents types
+                            scalaires ainsi que d'un champ du type de l'autre objet. On déclare les objets comme
+                            ci-dessus avec le mot clé <b>type</b>. On peut aussi déclarer des énumérations avec le mot
+                            <b>enum</b> comme c'est le cas pour <b>BookType</b>. Chaque type d'un champ peut être suivi
+                            d'un <b>!</b>. Cela signifie qu'il est obligatoire (ne peut pas être nul).</p>
+                        <p>En ce qui concerne les opérations (dont je détaille le fonctionnement dans la partie juste
+                            après), on va définir le type de l'opération (Query, Mutation et Subscription pour les types
+                            d'opérations basiques), et à l'intérieur les noms des opérations que l'utilisateur pourra
+                            demander. Il ne pourra pas faire d'autres opérations que celles qui sont énumérées dans le
+                            schéma.</p>
+                        <p>Enfin, on pourra définir des <b>input</b> pour les opérations des <b>Mutations</b>. On évite
+                            comme ça de passer un à un les champs dans les paramètres (et pour plus de sécurité).</p>
+                    </div>
+                </div>
+            </div>
+            <div class="opacity-0 content mb-8">
+                <div class="my-2">
+                    <h2 class="text-2xl text-center mb-8">Les opérations</h2>
+                    <p>Il existe trois types d'opérations natives dont voici les deux les plus importantes : Les <b>Queries</b>
+                        et les <b>Mutations</b>.
+                    </p>
+                    <ul class="list-disc">
+                        <li class="pl-4">Une <b>Query</b> est l'équivalent d'une requête GET. On va appeler une
+                            opération de type Query et
+                            spécifier les champs que l'on veut récupérer à l'intérieur. Côté client, on va écrire ceci :
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="opacity-0 content">
+                <pre data-enlighter-language="javascript" class="mb-8">
+{
+    getBooks {
+        title
+        author
+        type
+    }
+}
+                </pre>
+            </div>
+            <div class="opacity-0 content">
+                <p class="pl-4">Et on va obtenir :</p>
+                <pre data-enlighter-language="javascript" class="mb-8">
+{
+    "data" {
+        "getBooks" [
+            {
+                "title": "L'instant présent",
+                "author": "Guillaume MUSSO",
+                "type": "ROMAN"
+            },
+            {
+                "title": "Cinemastock",
+                "author": "Marcel Gottlieb",
+                "type": "BD"
+            }
+        ]
+    }
+}
+                </pre>
+                <p class="pl-4">Comme on peut le voir, le serveur ne nous renvoie que les champs qui ont été
+                    demandés.</p>
+            </div>
+            <div class="opacity-0 content mb-8">
+                <div class="my-2">
+                    <ul class="list-disc">
+                        <li class="pl-4">Une <b>Mutation</b> permet d'ajouter, de modifier, et de supprimer des données.
+                            Il est aussi possible de faire ça avec une Query, mais par on va préférer utiliser une
+                            Mutation par convention. Par exemple, si on veut ajouter un livre, on va demander
+                            l'opération <b>addBook</b> avec en paramètre un <b>BookAddInput</b> pour passer toutes les
+                            données d'un coup :
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <pre data-enlighter-language="javascript">
+mutation {
+    createBook(addBookInput: {
+        title: "Outsphere",
+        author: "Guy-Roger DUVERT",
+        price: 19.99,
+        type: "ROMAN"
+    }) {
+        title
+        author
+        price
+        type
+    }
+}
+                    </pre>
+                    <p class="pl-4">À la différence des Queries, on doit obligatoirement spécifier que le type de
+                        l'opération que l'on veut faire est une Mutation. On peut aussi spécifier comme dans une Query
+                        les champs que la requête va retourner (si elle retourne un objet) et on obtient ces champs-là
+                        si la Mutation est passée correctement.</p>
+                </div>
+            </div>
+            <div class="opacity-0 content mb-8">
+                <div class="my-2">
+                    <h2 class="text-2xl text-center mb-8">Les resolvers</h2>
+                    <p>Pour finir, nous avons les <b>Resolvers</b>. C'est ce qui résout les opérations, ce qui
+                        implémente leur fonctionnalité. En effet, il y a pour chaque opération du schéma, un Resolver
+                        qui va définir ce que l'opération retourne, modifie ou créé.</p>
+                </div>
+            </div>
+            <div class="opacity-0 content mb-8">
+                <pre data-enlighter-language="javascript">
+const resolvers = {
+    Query: {
+        getBooks: (parent, args, context, info) => {
+            return db.books;       // En imaginant qu'il y ai un tableau contenant les données de la base
+        },
+        getBook(parent, { id }, context, info) => {
+            const book = db.books.find((book) => book.id === id);
+            if(!book) {
+                throw new Error("Le livre d'id ${id} n'existe pas.");
+            }
+            return book;
+        },
+        // Même système avec les autres opérations...
+    },
+    Book: {
+        review: ({ reviewId }, args, context, info) => {
+            return db.reviews.find((review) => review.id === reviewId);
+        }
+    }
+    // Même système avec les autres objets...
+}
+                </pre>
+            </div>
+            <div class="opacity-0 content mb-16">
+                <p>On va y mettre dans chaque type d'opération toutes les implémentations de toutes les opérations. On
+                    va aussi écrire un Resolver pour chaque objet, pour qu'un objet qui a un autre objet dans ses champs
+                    puisse le récupérer. Chaque fonction du Resolver reçoit 4 arguments :</p>
+                <ul class="list-disc">
+                    <li><b>parent</b> : On obtient ici la valeur de retour du Resolver du parent s'il en a un. Par
+                        exemple, si on demande dans la ressource <b>getBooks</b> le champ <b>review</b>. On aura donc
+                        comme valeur de <b>parent</b> dans le resolver <b>Review</b> les données du <b>Book</b> qui l'a
+                        comme review.
+                    </li>
+                    <li><b>args</b> : Ce sont les arguments passés au Resolver. On peut directement récupérer l'argument
+                        dont on a besoin avec des <b>{ }</b>, comme ce qui est fait pour le Resolver <b>getBook</b> en
+                        récupérant l'id.
+                    </li>
+                    <li><b>context</b> : On peut passer ici des informations partagées par tous les Resolvers, comme par
+                        exemple la base de donnée, un jeton d'authentification, etc...
+                    </li>
+                    <li><b>info</b> : Le dernier argument contient les informations relatives au Resolver, comme le nom
+                        de l'opération, le type de retour, le type du parent ainsi que plein d'autres informations.
+                    </li>
+                </ul>
+            </div>
+            <div class="opacity-0 content">
+                <p>Ce sera tout pour cette rapide présentation de GraphQL. Évidemment il y a des choses dont je n'ai pas
+                    parlé comme les <b>Subscriptions</b>, du type <b>union</b>, des paramètres que l'on peut passer dans
+                    les opérations et d'autres choses, mais je vous invite à consulter la documentation officielle de
+                    GraphQL qui est très complète et facile à comprendre, dont le lien est dans la barre de navigation.
+                </p>
+                <p>Sur le site officiel, vous avez donc aussi accès aux différents langages pris en compte et serveurs
+                    qui implémente GraphQL dans chacun de ces langages. Je vous ai aussi mis un lien vers la
+                    documentation de <b>API Platform</b> que j'ai mis en place sur ce site, et que vous pouvez essayer <a
+                            href="http://localhost:8000/api/graphql?query=%7B%0A%20%20books%20%7B%0A%20%20%20%20edges%20%7B%0A%20%20%20%20%20%20node%20%7B%0A%20%20%20%20%20%20%20%20title%0A%20%20%20%20%20%20%20%20description%0A%20%20%20%20%20%20%20%20content%0A%20%20%20%20%20%20%20%20createdAt%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%20%20%7D%0A%7D"
+                            class="text-[-webkit-link] underline" target="_blank">ici</a>.</p>
+            </div>
+        </div>
+    </main>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script type="text/javascript" src="enlighterjs.min.js"></script>
+    <script type="text/javascript">
+        // INIT CODE - simple page-wide initialization based on css selectors
+        // - highlight all pre + code tags (CSS3 selectors)
+        // - use javascript as default language
+        // - use theme "dracula" as default theme
+        // - replace tabs with 2 spaces
+        EnlighterJS.init('pre', 'code.highlightme', {
+            language: 'javascript',
+            theme: 'atomic',
+            indent: 2
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            /* Every time the window is scrolled ... */
+            $(window).scroll(function () {
+                /* Check the location of each desired element */
+                $('.content').each(function (i) {
+                    var bottom_of_object = $(this).offset().top + ($(this).outerHeight() / 2);
+                    var bottom_of_window = $(window).scrollTop() + $(window).height();
+                    /* If the object is completely visible in the window, fade it it */
+                    if (bottom_of_window > bottom_of_object) {
+                        $(this).animate({'opacity': '1'}, 800);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
